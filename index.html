@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Studio - Enrollment Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #1A1A1A;
+            color: #FFFFFF;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .form-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .form-tagline {
+            font-size: 13px;
+            color: #CCCCCC;
+            letter-spacing: 0.5px;
+        }
+
+        /* Screen Container */
+        .screen {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Screen 1 Specific */
+        .privacy-clause-container {
+            background-color: #2A2A2A;
+            border-top: 1px solid #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
+            padding: 30px 20px;
+            height: 400px;
+            overflow-y: scroll;
+            margin-bottom: 30px;
+            scroll-behavior: smooth;
+        }
+
+        .privacy-clause-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #2A2A2A;
+        }
+
+        .privacy-clause-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #FFFFFF;
+            opacity: 0;
+            animation: textReveal 0.5s ease-in forwards;
+        }
+
+        @keyframes textReveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .clause-text-line {
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: textReveal 0.5s ease-in forwards;
+        }
+
+        .clause-text-line:nth-child(1) { animation-delay: 0.1s; }
+        .clause-text-line:nth-child(2) { animation-delay: 0.2s; }
+        .clause-text-line:nth-child(3) { animation-delay: 0.3s; }
+        .clause-text-line:nth-child(4) { animation-delay: 0.4s; }
+        .clause-text-line:nth-child(5) { animation-delay: 0.5s; }
+
+        #agreeBtn {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .privacy-clause-container.scrolled #agreeBtn {
+            display: block;
+        }
+
+        /* Section Title */
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 24px;
+            margin-top: 30px;
+        }
+
+        /* Interest Options */
+        .interest-options {
+            margin-bottom: 30px;
+        }
+
+        .option-group {
+            margin-bottom: 20px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 300ms ease;
+        }
+
+        .option-group:hover {
+            border-color: #FFFFFF;
+            background-color: rgba(192, 192, 192, 0.05);
+        }
+
+        .option-group input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #C0C0C0;
+        }
+
+        .option-title {
+            font-weight: 600;
+            color: #FFFFFF;
+            display: inline;
+        }
+
+        .option-description {
+            font-size: 14px;
+            color: #CCCCCC;
+            margin-left: 28px;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* Form Fields */
+        .form-field {
+            margin-bottom: 24px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #FFFFFF;
+            margin-bottom: 8px;
+        }
+
+        .field-input,
+        .field-select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #2A2A2A;
+            border: 1px solid #FFFFFF;
+            border-radius: 4px;
+            color: #FFFFFF;
+            transition: all 300ms ease;
+        }
+
+        .field-input::placeholder {
+            color: #CCCCCC;
+        }
+
+        .field-input:focus,
+        .field-select:focus {
+            outline: none;
+            border-color: #C0C0C0;
+            background-color: rgba(192, 192, 192, 0.05);
+        }
+
+        .field-input:-autofill,
+        .field-input:-autofill:hover,
+        .field-input:-autofill:focus {
+            -webkit-text-fill-color: #FFFFFF !important;
+            -webkit-box-shadow: 0 0 0px 1000px #2A2A2A inset !important;
+        }
+
+        .field-helper {
+            font-size: 13px;
+            color: #CCCCCC;
+            margin-top: 6px;
+        }
+
+        .field-error {
+            font-size: 13px;
+            color: #FF6B6B;
+            margin-top: 6px;
+            display: none;
+        }
+
+        .field-error.show {
+            display: block;
+        }
+
+        /* Radio & Checkbox Options */
+        .options-group {
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            margin-bottom: 16px;
+        }
+
+        .option-item input[type="radio"],
+        .option-item input[type="checkbox"] {
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: #C0C0C0;
+        }
+
+        .option-item label {
+            cursor: pointer;
+            color: #FFFFFF;
+            font-size: 15px;
+        }
+
+        /* Subgroup for timing */
+        .timing-subgroup {
+            margin-left: 0;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .timing-subgroup:last-child {
+            border-bottom: none;
+        }
+
+        .timing-subgroup-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #C0C0C0;
+            margin-bottom: 12px;
+        }
+
+        /* Mission Statement */
+        .mission-container {
+            background-color: #2A2A2A;
+            border-top: 1px solid #FFFFFF;
+            border-bottom: 1px solid #FFFFFF;
+            padding: 30px 20px;
+            height: 500px;
+            overflow-y: scroll;
+            margin: 30px 0;
+            scroll-behavior: smooth;
+        }
+
+        .mission-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #FFFFFF;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: #2A2A2A;
+        }
+
+        .mission-text-paragraph {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #FFFFFF;
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: textReveal 0.5s ease-in forwards;
+        }
+
+        .mission-text-paragraph:nth-child(2) { animation-delay: 0.1s; }
+        .mission-text-paragraph:nth-child(3) { animation-delay: 0.3s; }
+        .mission-text-paragraph:nth-child(4) { animation-delay: 0.5s; }
+        .mission-text-paragraph:nth-child(5) { animation-delay: 0.7s; }
+
+        /* Disclaimer */
+        .disclaimer {
+            font-size: 13px;
+            color: #CCCCCC;
+            margin: 30px 0;
+            line-height: 1.6;
+            padding: 16px;
+            border-left: 1px solid #FFFFFF;
+        }
+
+        /* Button Styles */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            justify-content: space-between;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 300ms ease;
+            text-transform: capitalize;
+        }
+
+        .btn-primary {
+            background-color: #C0C0C0;
+            color: #1A1A1A;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background-color: #D3D3D3;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #FFFFFF;
+            border: 1px solid #FFFFFF;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            border-color: #C0C0C0;
+            color: #C0C0C0;
+        }
+
+        .btn-text {
+            background-color: transparent;
+            color: #FFFFFF;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: none;
+            text-decoration: underline;
+        }
+
+        .btn-text:hover {
+            color: #C0C0C0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            background-color: #2A2A2A;
+            border: 1px solid #FFFFFF;
+            padding: 40px 20px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-message h2 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #FFFFFF;
+        }
+
+        .success-message p {
+            font-size: 14px;
+            color: #CCCCCC;
+            line-height: 1.6;
+        }
+
+        /* Exit Message */
+        .exit-message {
+            display: none;
+            background-color: #2A2A2A;
+            border: 1px solid #FFFFFF;
+            padding: 40px 20px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .exit-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .exit-message p {
+            font-size: 16px;
+            color: #CCCCCC;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body {
+                padding: 16px;
+            }
+
+            .form-container {
+                padding: 0;
+            }
+
+            .form-header {
+                margin-bottom: 30px;
+            }
+
+            .form-logo {
+                font-size: 20px;
+            }
+
+            .button-group {
+                flex-direction: row;
+            }
+
+            .btn {
+                padding: 12px 16px;
+                font-size: 14px;
+                min-height: 44px;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            .field-label {
+                font-size: 14px;
+            }
+
+            .field-input,
+            .field-select {
+                font-size: 16px;
+                padding: 14px;
+            }
+        }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Header -->
+        <div class="form-header">
+            <div class="form-logo">THE STUDIO</div>
+            <div class="form-tagline">CBSE Mathematics Tuition — Class 9 & 10</div>
+        </div>
+
+        <!-- Screen 1: Gate + Interest Check -->
+        <div id="screen1" class="screen active">
+            <!-- Privacy Clause -->
+            <div class="privacy-clause-container" id="privacyContainer">
+                <div class="privacy-clause-header">🔒 The Zark-Mukerberg Clause</div>
+                <div id="clauseText"></div>
+            </div>
+
+            <button id="agreeBtn" class="btn btn-primary" onclick="goToInterestCheck()">I Agree</button>
+
+            <!-- Interest Check (Hidden initially) -->
+            <div id="interestCheckDiv" class="hidden">
+                <div class="section-title">Just Gotta make sure we're on the same page</div>
+                <div class="interest-options">
+                    <div class="option-group" onclick="selectOption('interest', 'yes', this)">
+                        <input type="radio" name="interest" value="yes" id="yesOption">
+                        <label for="yesOption">
+                            <span class="option-title">Let's do this, I'm Interested</span>
+                            <span class="option-description">Maths tuition, Class 9/10, CBSE. | Free Curriculum at the End.</span>
+                        </label>
+                    </div>
+                    <div class="option-group" onclick="selectOption('interest', 'no', this)">
+                        <input type="radio" name="interest" value="no" id="noOption">
+                        <label for="noOption">
+                            <span class="option-title">I'll pass</span>
+                            <span class="option-description">Not what I need.</span>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="processInterest()">Let's go</button>
+            </div>
+
+            <!-- Exit Message (Hidden initially) -->
+            <div id="exitMessage" class="exit-message">
+                <p>Thanks for considering The Studio. If maths tuition interests you later, you know where to find us.</p>
+            </div>
+        </div>
+
+        <!-- Screen 2: Student & Parent Details -->
+        <div id="screen2" class="screen">
+            <div class="section-title">Who are you & Who's got your back?</div>
+
+            <div class="form-field">
+                <label class="field-label">Your Government Name</label>
+                <input type="text" class="field-input" id="studentName" placeholder="First and last name">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Your mobile number</label>
+                <input type="tel" class="field-input" id="studentMobile" placeholder="10-digit mobile number" maxlength="10">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Your email ID</label>
+                <input type="email" class="field-input" id="studentEmail" placeholder="example@email.com">
+                <div class="field-helper">We'll send your free curriculum roadmap here</div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Your school</label>
+                <input type="text" class="field-input" id="school" placeholder="School name">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Which class are you in?</label>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="class" value="9" id="class9">
+                        <label for="class9">Class 9</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="class" value="10" id="class10">
+                        <label for="class10">Class 10</label>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="section-title" style="margin-top: 40px;">Parent or Guardian — Whoever's in Charge</div>
+
+            <div class="form-field">
+                <label class="field-label">Their Name</label>
+                <input type="text" class="field-input" id="parentName" placeholder="First and last name">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Their mobile number</label>
+                <input type="tel" class="field-input" id="parentMobile" placeholder="10-digit mobile number" maxlength="10">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="previousScreen()">Back</button>
+                <button class="btn btn-primary" onclick="validateAndNextScreen(2)">Done</button>
+            </div>
+        </div>
+
+        <!-- Screen 3: Logistics & Preferences -->
+        <div id="screen3" class="screen">
+            <div class="section-title">Where, When, and How</div>
+
+            <div class="form-field">
+                <label class="field-label">Which part of Dimapur?</label>
+                <input type="text" class="field-input" id="location" placeholder="Area or locality">
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">When are you available?</label>
+                <div class="timing-subgroup">
+                    <div class="timing-subgroup-title">Weekdays (Mon-Fri)</div>
+                    <div class="options-group">
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekday-morning" id="weekdayMorning">
+                            <label for="weekdayMorning">Morning</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekday-afternoon" id="weekdayAfternoon">
+                            <label for="weekdayAfternoon">Afternoon</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekday-evening" id="weekdayEvening">
+                            <label for="weekdayEvening">Evening</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="timing-subgroup">
+                    <div class="timing-subgroup-title">Weekends (Sat-Sun)</div>
+                    <div class="options-group">
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekend-morning" id="weekendMorning">
+                            <label for="weekendMorning">Morning</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekend-afternoon" id="weekendAfternoon">
+                            <label for="weekendAfternoon">Afternoon</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="timing" value="weekend-evening" id="weekendEvening">
+                            <label for="weekendEvening">Evening</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">How do you want to learn?</label>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="format" value="personal" id="formatPersonal">
+                        <label for="formatPersonal">Personal Home Tuition | 1:1 at your home.</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="format" value="group" id="formatGroup">
+                        <label for="formatGroup">Learning with Squad | Group classes at your home or The Studio (Burma Camp).</label>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Are you engaged in any Tuition</label>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="coaching" value="yes" id="coachingYes">
+                        <label for="coachingYes">Yes</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="coaching" value="no" id="coachingNo">
+                        <label for="coachingNo">No</label>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="previousScreen()">Back</button>
+                <button class="btn btn-primary" onclick="validateAndNextScreen(3)">Done</button>
+            </div>
+        </div>
+
+        <!-- Screen 4: Maths Perception + Mission -->
+        <div id="screen4" class="screen">
+            <div class="form-field">
+                <label class="field-label">Your maths reality check We must know!</label>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="perception" value="lost" id="lost">
+                        <label for="lost">Completely lost. Maths feels impossible.</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="perception" value="struggle" id="struggle">
+                        <label for="struggle">Struggle with basics. Lose marks on simple stuff.</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="perception" value="mistakes" id="mistakes">
+                        <label for="mistakes">Understand concepts but make silly mistakes or slow in exams.</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="perception" value="good" id="good">
+                        <label for="good">Already good, but want to be exceptional.</label>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <div class="form-field">
+                <label class="field-label">Real Talk & Self Clarity</label>
+                <div class="options-group">
+                    <div class="option-item">
+                        <input type="radio" name="effort" value="yes" id="effortYes">
+                        <label for="effortYes">I'm willing to put in consistent effort | to actually level up.</label>
+                    </div>
+                    <div class="option-item">
+                        <input type="radio" name="effort" value="maybe" id="effortMaybe">
+                        <label for="effortMaybe">Not sure yet | I want to explore first.</label>
+                    </div>
+                </div>
+                <div class="field-error"></div>
+            </div>
+
+            <button class="btn btn-secondary" style="width: 100%; margin: 30px 0;" onclick="revealMission()">See The Studio's mission</button>
+
+            <div id="missionDiv" class="hidden">
+                <div class="mission-container" id="missionContainer">
+                    <div class="mission-header">Here's WHY we Exist & What we BELIEVE in!</div>
+                    <div id="missionText"></div>
+                </div>
+
+                <div class="form-field">
+                    <label class="field-label">Which option interests you?</label>
+                    <div class="options-group">
+                        <div class="option-item">
+                            <input type="radio" name="tuition" value="premium" id="tuitionPremium">
+                            <label for="tuitionPremium">Premium Tuition (₹6000+/month) — Intensive 1:1 + weekly quizzes</label>
+                        </div>
+                        <div class="option-item">
+                            <input type="radio" name="tuition" value="economical" id="tuitionEconomical">
+                            <label for="tuitionEconomical">Economical Tuition (₹3000-6000/month) — Small group + weekly quizzes</label>
+                        </div>
+                    </div>
+                    <div class="field-error"></div>
+                </div>
+
+                <div class="disclaimer">
+                    Note: Completing this form does not guarantee a slot. The Studio will review your responses and contact you based on your answers and availability.
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="previousScreen()">Back</button>
+                    <button class="btn btn-primary" onclick="validateAndSubmit()">I'm ready</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="successMessage" class="success-message">
+            <h2>Thanks for applying!</h2>
+            <p>We'll contact you within a week with your free curriculum and demo class details.</p>
+        </div>
+    </div>
+
+    <script>
+        // Form State
+        const formData = {
+            interest: '',
+            studentName: '',
+            studentMobile: '',
+            studentEmail: '',
+            school: '',
+            class: '',
+            parentName: '',
+            parentMobile: '',
+            location: '',
+            timing: '',
+            format: '',
+            coaching: '',
+            perception: '',
+            effort: '',
+            tuition: ''
+        };
+
+        let currentScreen = 1;
+        const clauseText = `Everything you drop into this form — your name, your location, your answers — is 100% locked down, protected, and will never be shared with anyone. We maintain absolute vault-level privacy here. Why? Because obviously, Silicon Valley billionaires definitely don't have enough of our data already. We're keeping this locally secure, far away from California. Your secrets are safe with us.`;
+
+        const missionText = `We believe absolutely anyone can learn maths — and become above average till Class 10. That's it. That's the mission.
+
+Most students get lost because they're building on a weak foundation. We start by clearing all the basics you need (from Class 4 Syllabus Onwards) in a quick, intense revision method. Then we teach conceptual clarity through real-life experiments and problems — no rote learning.
+
+You'll practice during session hours, take weekly quizzes in group chats (WA/IG), help your peers, and most importantly — LEARN HOW TO STUDY anything.
+
+This method works for any subject, any exam, any challenge in your future. Breaking down hard problems into smaller ones. Solving them with ease, calmness, and confidence. That's not just for math school exams — that's a LIFE SKILL.`;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeClauseText();
+            initializeMissionText();
+            setupScrollDetection();
+        });
+
+        function initializeClauseText() {
+            const clauseContainer = document.getElementById('clauseText');
+            const lines = clauseText.split('. ');
+            clauseContainer.innerHTML = lines.map((line, i) => {
+                const text = line + (i < lines.length - 1 ? '.' : '');
+                return `<div class="clause-text-line">${text}</div>`;
+            }).join('');
+        }
+
+        function initializeMissionText() {
+            const missionContainer = document.getElementById('missionText');
+            const paragraphs = missionText.split('\n\n');
+            missionContainer.innerHTML = paragraphs.map(para => {
+                return `<div class="mission-text-paragraph">${para}</div>`;
+            }).join('');
+        }
+
+        function setupScrollDetection() {
+            const privacyContainer = document.getElementById('privacyContainer');
+            privacyContainer.addEventListener('scroll', function() {
+                const scrollPercentage = (this.scrollTop / (this.scrollHeight - this.clientHeight)) * 100;
+                if (scrollPercentage > 80) {
+                    this.classList.add('scrolled');
+                }
+            });
+        }
+
+        function goToInterestCheck() {
+            document.getElementById('interestCheckDiv').classList.remove('hidden');
+            document.getElementById('agreeBtn').classList.add('hidden');
+        }
+
+        function selectOption(name, value, element) {
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+        }
+
+        function processInterest() {
+            const interest = document.querySelector('input[name="interest"]:checked');
+            if (!interest) {
+                alert('Please select an option');
+                return;
+            }
+
+            if (interest.value === 'no') {
+                document.getElementById('interestCheckDiv').classList.add('hidden');
+                document.getElementById('exitMessage').classList.add('show');
+                return;
+            }
+
+            formData.interest = interest.value;
+            goToScreen(2);
+        }
+
+        function validateAndNextScreen(screen) {
+            if (screen === 2) {
+                const errors = validateScreen2();
+                if (errors.length > 0) {
+                    showErrors(screen, errors);
+                    return;
+                }
+                formData.studentName = document.getElementById('studentName').value;
+                formData.studentMobile = document.getElementById('studentMobile').value;
+                formData.studentEmail = document.getElementById('studentEmail').value;
+                formData.school = document.getElementById('school').value;
+                formData.class = document.querySelector('input[name="class"]:checked').value;
+                formData.parentName = document.getElementById('parentName').value;
+                formData.parentMobile = document.getElementById('parentMobile').value;
+            } else if (screen === 3) {
+                const errors = validateScreen3();
+                if (errors.length > 0) {
+                    showErrors(screen, errors);
+                    return;
+                }
+                formData.location = document.getElementById('location').value;
+                formData.timing = document.querySelector('input[name="timing"]:checked').value;
+                formData.format = document.querySelector('input[name="format"]:checked').value;
+                formData.coaching = document.querySelector('input[name="coaching"]:checked').value;
+            }
+
+            goToScreen(screen + 1);
+        }
+
+        function validateScreen2() {
+            const errors = [];
+            const name = document.getElementById('studentName').value.trim();
+            const mobile = document.getElementById('studentMobile').value.trim();
+            const email = document.getElementById('studentEmail').value.trim();
+            const school = document.getElementById('school').value.trim();
+            const classValue = document.querySelector('input[name="class"]:checked');
+            const parentName = document.getElementById('parentName').value.trim();
+            const parentMobile = document.getElementById('parentMobile').value.trim();
+
+            if (!name || name.length < 3) errors.push({ field: 'studentName', msg: 'Name must be at least 3 characters' });
+            if (!mobile || mobile.length !== 10 || isNaN(mobile)) errors.push({ field: 'studentMobile', msg: 'Mobile number must be exactly 10 digits' });
+            if (!email || !email.includes('@')) errors.push({ field: 'studentEmail', msg: 'Please enter a valid email address' });
+            if (!school || school.length < 3) errors.push({ field: 'school', msg: 'School name is required' });
+            if (!classValue) errors.push({ field: 'class', msg: 'Please select a class' });
+            if (!parentName || parentName.length < 3) errors.push({ field: 'parentName', msg: 'Parent name must be at least 3 characters' });
+            if (!parentMobile || parentMobile.length !== 10 || isNaN(parentMobile)) errors.push({ field: 'parentMobile', msg: 'Mobile number must be exactly 10 digits' });
+
+            return errors;
+        }
+
+        function validateScreen3() {
+            const errors = [];
+            const location = document.getElementById('location').value.trim();
+            const timing = document.querySelector('input[name="timing"]:checked');
+            const format = document.querySelector('input[name="format"]:checked');
+            const coaching = document.querySelector('input[name="coaching"]:checked');
+
+            if (!location || location.length < 3) errors.push({ field: 'location', msg: 'Location is required' });
+            if (!timing) errors.push({ field: 'timing', msg: 'Please select a timing' });
+            if (!format) errors.push({ field: 'format', msg: 'Please select a tuition format' });
+            if (!coaching) errors.push({ field: 'coaching', msg: 'Please select an option' });
+
+            return errors;
+        }
+
+        function validateAndSubmit() {
+            const perception = document.querySelector('input[name="perception"]:checked');
+            const effort = document.querySelector('input[name="effort"]:checked');
+            const tuition = document.querySelector('input[name="tuition"]:checked');
+
+            const errors = [];
+            if (!perception) errors.push({ field: 'perception', msg: 'Please select your maths perception' });
+            if (!effort) errors.push({ field: 'effort', msg: 'Please answer about your effort willingness' });
+            if (!tuition) errors.push({ field: 'tuition', msg: 'Please select a tuition option' });
+
+            if (errors.length > 0) {
+                showErrors(4, errors);
+                return;
+            }
+
+            formData.perception = perception.value;
+            formData.effort = effort.value;
+            formData.tuition = tuition.value;
+
+            submitForm();
+        }
+
+        function submitForm() {
+            // Check if email already exists (prevent duplicates)
+            const existingEmail = localStorage.getItem('submittedEmail_' + formData.studentEmail);
+            if (existingEmail) {
+                alert('This email has already been used to apply. Please use a different email address.');
+                return;
+            }
+
+            // Store submitted email
+            localStorage.setItem('submittedEmail_' + formData.studentEmail, 'true');
+
+            // Send to Google Sheets
+            const dataToSend = {
+                timestamp: new Date().toLocaleString(),
+                student_name: formData.studentName,
+                student_mobile: formData.studentMobile,
+                student_email: formData.studentEmail,
+                school: formData.school,
+                class: formData.class,
+                parent_name: formData.parentName,
+                parent_mobile: formData.parentMobile,
+                location: formData.location,
+                timing: formData.timing,
+                tuition_format: formData.format,
+                current_coaching: formData.coaching,
+                maths_perception: formData.perception,
+                effort_willingness: formData.effort,
+                tuition_option: formData.tuition
+            };
+
+            // Send data (you'll configure this in Google Apps Script)
+            sendToGoogleSheets(dataToSend);
+
+            // Show success message
+            hideAllScreens();
+            document.getElementById('successMessage').classList.add('show');
+
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                resetForm();
+            }, 3000);
+        }
+
+        function sendToGoogleSheets(data) {
+            // This will be configured during setup
+            // For now, we'll use a Web App endpoint
+            const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';
+            const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL'; // You'll get this during setup
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data)
+            }).catch(err => console.log('Data sent to sheet'));
+        }
+
+        function showErrors(screen, errors) {
+            clearAllErrors();
+            errors.forEach(error => {
+                const field = document.getElementById(error.field);
+                if (field) {
+                    const errorDiv = field.nextElementSibling;
+                    if (errorDiv && errorDiv.classList.contains('field-error')) {
+                        errorDiv.textContent = error.msg;
+                        errorDiv.classList.add('show');
+                    }
+                }
+            });
+        }
+
+        function clearAllErrors() {
+            document.querySelectorAll('.field-error.show').forEach(el => {
+                el.classList.remove('show');
+            });
+        }
+
+        function goToScreen(screen) {
+            hideAllScreens();
+            currentScreen = screen;
+            document.getElementById('screen' + screen).classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        function previousScreen() {
+            if (currentScreen > 1) {
+                if (currentScreen === 4 && !document.getElementById('missionDiv').classList.contains('hidden')) {
+                    // Hide mission if going back from mission view
+                    document.getElementById('missionDiv').classList.add('hidden');
+                } else {
+                    goToScreen(currentScreen - 1);
+                }
+            }
+        }
+
+        function revealMission() {
+            const missionDiv = document.getElementById('missionDiv');
+            if (!missionDiv.classList.contains('hidden')) return;
+
+            missionDiv.classList.remove('hidden');
+            const missionContainer = document.getElementById('missionContainer');
+            missionContainer.scrollTop = 0;
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+        }
+
+        function resetForm() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>
